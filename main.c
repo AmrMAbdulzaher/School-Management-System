@@ -21,7 +21,7 @@
 void loginPanel(char *, char *);
 void adminPanel(void);
 void studentPanel(void);
-void systemclr(void);
+void systemheader(void);
 
 typedef struct
 {
@@ -30,6 +30,8 @@ typedef struct
     float gpa;
 
 } studentData;
+
+int numberOfStudents=0;
 
 int main()
 {
@@ -49,11 +51,9 @@ int main()
     for (int i = 0; i < MAXSTUDENTS; i++)
     {
         student[i].id = 0; 
-		strcpy(student[i].name, "NONAME");
-		student[i].gpa= 0.0;
     }
 
-	systemclr();
+	systemheader();
 
     do
     {
@@ -63,18 +63,18 @@ int main()
         {
             invalidLogin = 0;
             adminLine:
-			systemclr();
+			systemheader();
             printf("[1] Add Student\n");
             printf("[2] Edit Student Info\n");
             printf("[3] Show Students List\n");
             printf("[4] Exit\n");
-            scanLine:
+            scanChoiceChar:
             scanf(" %c", &choiceChar); // Read a character with space to skip whitespace
             switch (choiceChar)
             {
                 case '1':
                 {
-					systemclr();
+					systemheader();
 					printf("Add Student\n");
     				printf("============\n");
 
@@ -83,79 +83,110 @@ int main()
 
                     if (inputID < 1 || inputID > MAXSTUDENTS)
                     {
-                        printf("Invalid Student ID. Press any key to continue.");
-                        getchar(); // Consume newline
-                        getchar(); // Wait for user input
+                        printf("\033[1;31mInvalid Student ID. Press any key to continue.");
+						printf("\033[0m");
+						getchar();
+						int c;
+						while ((c = getchar()) != '\n' && c != EOF);
+						getchar();
                         goto adminLine;
                     }
+					
 					if (student[inputID - 1].id == 0)
 					{
                     	student[inputID - 1].id = inputID;
                     	printf("Enter Student's Full Name: ");
                     	scanf(" %[^\n]%*c", student[inputID - 1].name);
-                    	printf("Enter Student's CGPA: ");
+                    	printf("Enter Student's CGPA [MAX. 4]: ");
+						scanGPA:
                     	scanf("%f", &student[inputID - 1].gpa);
-                    	printf("\033[1;31mSUCCESSFULLY ADDED!, enter 'a' for admin panel or 'e' to exit.\n");
+						
+						if(student[inputID - 1].gpa < 0.0 || student[inputID - 1].gpa > 4.0)
+						{
+							printf("Invalid GPA, re-Enter Student's CGPA [MAX. 4]: ");
+							goto scanGPA;
+						}
+						
+						numberOfStudents++;
+                    	printf("\033[1;31mSUCCESSFULLY ADDED!, Press any key to continue.\n");
 					}
 					else
 					{
-						printf("\033[1;31mALREADY ADDED!, enter 'a' for admin panel or 'e' to exit.\n");
+						printf("\033[1;31mALREADY ADDED!, Press any key to continue.\n");
 					}
-					printf("\033[0m");
-                    scanf(" %c", &choiceChar);
-                    if (choiceChar == 'a')
-                    {
-                        goto adminLine;
-                    }
+                    printf("\033[0m");
+                    getchar(); 
+                    getchar();
+                    goto adminLine;
+
 					
                     break;
                 }
                 case '2':
                 {
-                    systemclr();
+                    systemheader();
 					printf("Edit Student Info\n");
     				printf("==================\n");
                     printf("Enter Student's ID [from 1 to %d]: ",MAXSTUDENTS);
                     scanf("%hhu", &inputID);
 
-                    for (int i = 0; i < MAXSTUDENTS; i++)
-                        {
-                            if (inputID == student[i].id)
-                            {
-                                flag = i;
-                                break;
-                            }
-                        }
-                    printf("Enter Student's New Full Name: ");
-                    scanf(" %[^\n]%*c", student[flag].name);
-                    printf("Enter Student's New CGPA: ");
-                    scanf("%f", &student[flag].gpa);
-                    printf("\033[1;31mSUCCESSFULLY EDITED!, enter 'a' for admin panel or 'e' to exit.\n");
-                    printf("\033[0m");
-                    scanf(" %c", &choiceChar);
-                    if (choiceChar == 'a')
+                    if (inputID < 1 || inputID > MAXSTUDENTS || student[inputID-1].id==0 )
                     {
+                        printf("\033[1;31mInvalid Student ID. Press any key to continue.");
+						printf("\033[0m");
+						getchar();
+						getchar(); 
+                        int c;
+						while ((c = getchar()) != '\n' && c != EOF);
                         goto adminLine;
                     }
-
+                    printf("Enter Student's New Full Name: ");
+                    scanf(" %[^\n]%*c", student[inputID-1].name);
+                    printf("Enter Student's New CGPA [MAX. 4]: ");
+					scanNewGPA:
+                    scanf("%f", &student[inputID-1].gpa);
+					if(student[inputID - 1].gpa < 0.0 || student[inputID - 1].gpa > 4.0)
+					{
+						printf("Invalid GPA, re-Enter Student's New CGPA [MAX. 4]: ");
+						goto scanNewGPA;
+					}
+                    printf("\033[1;31mSUCCESSFULLY EDITED!, Press any key to continue.\n");
+                    printf("\033[0m");
+                    getchar(); 
+                    getchar();
+                    goto adminLine;
                     break;
                 }
                 case '3':
                 {
-                    systemclr();
+                    systemheader();
 					printf("Students List\n");
     				printf("==================\n");
-					for(int i= 0; i< MAXSTUDENTS; i++)
+					
+					if(numberOfStudents>0)
 					{
-						printf("ID: %hhu\tName: %s\tCGPA: %g\n",student[i].id,student[i].name,student[i].gpa);
+						for(int i= 0; i< MAXSTUDENTS ; i++)
+						{
+							if(student[i].id !=0)
+							{
+								printf("ID: %hhu\tName: %s\tCGPA: %g\n",student[i].id,student[i].name,student[i].gpa);
+							}
+							else
+							{
+								continue;
+							}
+						}
 					}
-					printf("\033[1;31menter 'a' for admin panel or any other key to exit.\n");
+					else
+					{
+						printf("NO STUDENTS ADDED YET!\n");
+					}
+					
+					printf("\033[1;31mPress any key to continue.\n");
 					printf("\033[0m");
-                    scanf(" %c", &choiceChar);
-                    if (choiceChar == 'a')
-                    {
-                        goto adminLine;
-                    }
+					getchar();
+					getchar();
+                    goto adminLine;
                     break;
                 }
                 case '4':
@@ -164,14 +195,13 @@ int main()
                     return 0;
                 }
                 default:
-                    printf("Invalid Input: ");
-                    goto scanLine;
+                    goto scanChoiceChar;
             }
         }
         else if (!(strcmp(username, studentUser) && strcmp(password, studentPassword)))
         {
             invalidLogin = 0;
-            systemclr();
+            systemheader();
             printf("HELLO STUDENT!\n");
         }
         else
@@ -179,14 +209,14 @@ int main()
             attempsCounter--;
             if (attempsCounter != 0)
             {
-                systemclr();
+                systemheader();
                 printf("\033[1;31m");
                 printf("WRONG User or Password! %d attempts left.\n", attempsCounter);
                 printf("\033[0m");
             }
             else
             {
-				systemclr();
+				systemheader();
                 printf("\033[1;31m");
                 printf("You have been kicked out of the system due to too many wrong attempts.\n");
                 break;
@@ -206,7 +236,7 @@ void loginPanel(char *user, char *pass)
     scanf("%29s", pass);
 }
 
-void systemclr(void)
+void systemheader(void)
 {
 	system(CLEAR);
 	printf("School Management System\n");
