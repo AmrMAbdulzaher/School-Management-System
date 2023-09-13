@@ -67,6 +67,7 @@ int main()
         if (!(strcmp(username, adminUser) || strcmp(password, adminPassword)))
         {
             invalidLogin = 0;
+            systemheader();
             adminLine:
 			systemheader();
             printf("[1] Add Student\n");
@@ -245,12 +246,13 @@ int main()
 				case '6':
                 {
                     systemheader();
-                    char plain[] = "Exiting......\n";
+                    printf("Exiting");
+                    char plain[] = ".........\n";
                     for(int i = 0; plain[i]!='\0';i++)
                     {
                         putchar(plain[i]);
                         fflush(stdout);
-                        usleep(150000);
+                        usleep(200000);
                     }
                     return 0;
                 }
