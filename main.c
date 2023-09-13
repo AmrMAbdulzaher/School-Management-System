@@ -1,8 +1,12 @@
+/*
+ * Shams: Add Typing Effect to Exiting option @6:10
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #ifdef _WIN32
 #define CLEAR "cls"
@@ -71,6 +75,7 @@ int main()
             printf("[4] Delete Student Info\n");
 			printf("[5] Logout\n");
 			printf("[6] Exit\n");
+            printf("========================\n");
             scanChoiceChar:
             scanf(" %c", &choiceChar);
             switch (choiceChar)
@@ -195,8 +200,43 @@ int main()
                 }
                 case '4':
                 {
-                    //PUT DELETE HERE
-                    return 0;
+                    systemheader();
+					printf("Delete Student Info\n");
+    				printf("==================\n");
+                    if (numberOfStudents!=0){
+
+                        printf("Enter Student's ID [from 1 to %d]: ",MAXSTUDENTS);
+                        scanf("%hhu", &inputID);
+
+                        if (inputID < 1 || inputID > MAXSTUDENTS || student[inputID-1].id==0 )
+                        {
+                            printf("\033[1;31mInvalid Student ID. Press any key to continue.");
+                            printf("\033[0m");
+                            getchar();
+                            getchar();
+                            int c;
+                            while ((c = getchar()) != '\n' && c != EOF);
+                            goto adminLine;
+                        }
+                        student[inputID-1].id = 0;
+                        printf("\033[1;31mSUCCESSFULLY Deleted!, Press any key to continue.\n");
+                        numberOfStudents--;
+                        printf("\033[0m");
+                        getchar();
+                        getchar();
+                        goto adminLine;
+                        break;
+                    }
+                    else{
+						printf("NO STUDENTS ADDED YET!\n");
+                        printf("\033[1;31mPress any key to continue.\n");
+                        printf("\033[0m");
+                        getchar();
+                        getchar();
+                        goto adminLine;
+                        break;
+                    }
+
                 }
 				case '5':
                 {
@@ -204,7 +244,14 @@ int main()
                 }
 				case '6':
                 {
-                    printf("Exiting...\n");
+                    systemheader();
+                    char plain[] = "Exiting......\n";
+                    for(int i = 0; plain[i]!='\0';i++)
+                    {
+                        putchar(plain[i]);
+                        fflush(stdout);
+                        usleep(150000);
+                    }
                     return 0;
                 }
                 default:
