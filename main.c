@@ -28,6 +28,7 @@ typedef struct
     char name[20];
     unsigned char id;
     float gpa;
+
 } studentData;
 
 int main()
@@ -40,7 +41,9 @@ int main()
     int choice;
     unsigned char inputID;
     char choiceChar;
+    //Array of struct studentData
     studentData student[MAXSTUDENTS];
+    int flag;
 
     // Initialize student data
     for (int i = 0; i < MAXSTUDENTS; i++)
@@ -112,6 +115,29 @@ int main()
                     systemclr();
 					printf("Edit Student Info\n");
     				printf("==================\n");
+                    printf("Enter Student's ID [from 1 to %d]: ",MAXSTUDENTS);
+                    scanf("%hhu", &inputID);
+
+                    for (int i = 0; i < MAXSTUDENTS; i++)
+                        {
+                            if (inputID == student[i].id)
+                            {
+                                flag = i;
+                                break;
+                            }
+                        }
+                    printf("Enter Student's New Full Name: ");
+                    scanf(" %[^\n]%*c", student[flag].name);
+                    printf("Enter Student's New CGPA: ");
+                    scanf("%f", &student[flag].gpa);
+                    printf("\033[1;31mSUCCESSFULLY EDITED!, enter 'a' for admin panel or 'e' to exit.\n");
+                    printf("\033[0m");
+                    scanf(" %c", &choiceChar);
+                    if (choiceChar == 'a')
+                    {
+                        goto adminLine;
+                    }
+
                     break;
                 }
                 case '3':
