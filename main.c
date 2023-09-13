@@ -37,8 +37,6 @@ int main()
     int userChoice;
     char username[20];
     char password[30];
-    int invalidLogin = 1;
-    int attempsCounter = 4;
     int choice;
     unsigned char inputID;
     char choiceChar;
@@ -54,13 +52,15 @@ int main()
 	
 	LoginLine:
 	systemheader();
-
+	int attempsCounter = 4;
+	int invalidLogin = 1;
+	
     do
     {
         loginPanel(username, password);
 		
 		//USER IS ADMIN
-        if (!(strcmp(username, adminUser) && strcmp(password, adminPassword)))
+        if (!(strcmp(username, adminUser) || strcmp(password, adminPassword)))
         {
             invalidLogin = 0;
             adminLine:
@@ -212,7 +212,7 @@ int main()
         }
 		
 		//USER IS STUDENT
-        else if (!(strcmp(username, studentUser) && strcmp(password, studentPassword)))
+        else if (!(strcmp(username, studentUser) || strcmp(password, studentPassword)))
         {
             invalidLogin = 0;
             systemheader();
