@@ -1,8 +1,8 @@
 /*
  * Shams: Add Typing Effect to Exiting option @6:10
  * Shams: Edit Arch. && other options @7:11
- *
- *
+ * Shams: Add About us @7:45
+ * shams: add opt. 5
  *
 */
 
@@ -93,8 +93,9 @@ int main()
                         printf("[2] Edit Student Info\n");
                         printf("[3] Show Students List\n");
                         printf("[4] Delete Student Info\n");
-                        printf("[5] Logout\n");
-                        printf("[6] Exit\n");
+                        printf("[5] Back To Main\n"); //SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs
+                        printf("[6] Logout\n");
+                        printf("[7] Exit\n");
                         printf("========================\n");
                         scanChoiceChar:
                         scanf(" %c", &choiceChar);
@@ -260,9 +261,13 @@ int main()
                             }
                             case '5':
                             {
-                                goto LoginLine;
+                                goto scanChoiceChar_1;
                             }
                             case '6':
+                            {
+                                goto LoginLine;
+                            }
+                            case '7':
                             {
                                 systemheader();
                                 printf("Exiting");
