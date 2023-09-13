@@ -315,7 +315,34 @@ int main()
             case '2':
             {
                 systemheader();
-                puts("Shams");//Add about us here
+                puts("\033[1;31m\t\t\t\t\t\t     ===================\n");
+                char plain[] = "\t\t\t\tAmr Mohamed Abdulzaher\t\t\tMohamed Ahmed Shams\n";
+                char email1[] = "\t\t\t\tamrnassareng@gmail.com";
+                char email2[] = "\t\t\tMohamed.Ah.Shams@gmail.com\n";
+                int i;
+                printf("\033[0m");
+                for (i = 0; plain[i] != '\0'; i++) {
+                    putchar(plain[i]);
+                    fflush(stdout);
+                    usleep(100000);
+                }
+
+                printf("\033[0;32m");
+                for (i = 0; email1[i] != '\0'; i++) {
+                    putchar(email1[i]);
+                    fflush(stdout);
+                    usleep(100000);
+                }
+                printf("\033[0m");
+
+                printf("\033[0;34m");
+                for (i = 0; email2[i] != '\0'; i++) {
+                    putchar(email2[i]);
+                    fflush(stdout);
+                    usleep(100000);
+                }
+
+                puts("\033[1;31m\n\t\t\t\t\t\t     ===================");
                 printf("\033[1;31mPress any key to continue.\n");
                 printf("\033[0m");
                 getchar();
