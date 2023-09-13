@@ -22,13 +22,11 @@ typedef struct
 void printExiting(void);
 void systemheader(void);
 void mainMenu(void);
-void displayAdminMenu(void);
 void loginPanel(char *user, char *pass);
 void loginAgain(void);
 void adminPanel(studentData student[]);
-void studentPanel(void);
 void addStudent(studentData student[]);
 void editStudent(studentData student[]);
 void showStudents(studentData student[]);
 void deleteStudent(studentData student[]);
-void printAboutUs(void);
+void printAbout(void);

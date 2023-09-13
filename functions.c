@@ -40,7 +40,7 @@ void mainMenu(void)
 	printf("Main Menu\n");
     printf("========================\n");
     printf("[1] Login\n");
-    printf("[2] About us\n");
+    printf("[2] About\n");
     printf("[3] Exit\n");
     printf("========================\n");
 	scanf(" %c", &mainMenuInput);
@@ -55,7 +55,7 @@ void mainMenu(void)
 
          case '2':
          {
-             printAboutUs();
+             printAbout();
              break;
          }
 
@@ -71,18 +71,6 @@ void mainMenu(void)
 	return;
 }
 
-
-/*void displayAdminMenu(void)
-{
-	systemheader();
-    printf("[1] Add Student\n");
-    printf("[2] Edit Student Info\n");
-    printf("[3] Show Students List\n");
-    printf("[4] Delete Student Info\n");
-    printf("[5] Logout\n");
-    printf("[6] Exit\n");
-    printf("========================\n");
-}*/
 
 void systemheader(void)
 {
@@ -302,8 +290,9 @@ void adminPanel(studentData student[])
     printf("[2] Edit Student Info\n");
     printf("[3] Show Students List\n");
     printf("[4] Delete Student Info\n");
-    printf("[5] Logout\n");
-    printf("[6] Exit\n");
+	printf("[5] Main Menu\n");
+    printf("[6] Logout\n");
+    printf("[7] Exit\n");
     printf("========================\n");
     scanf(" %c", &choiceChar);
 
@@ -321,11 +310,14 @@ void adminPanel(studentData student[])
         case '4':
             deleteStudent(student);
             break;
-        case '5':
+		case '5':
+			mainMenu();
+			break;
+        case '6':
 			systemheader();
             loginPanel(username, password);
 			break;
-        case '6':
+        case '7':
             printExiting();
 			break;
         default:
@@ -336,9 +328,11 @@ void adminPanel(studentData student[])
 	
 }
 
-void printAboutUs(void)
+void printAbout(void)
 {
 	systemheader();
+	printf("About\n");
+    printf("========================\n");
     puts("\033[1;31m\t\t\t\t\t\t     ===================\n");
     char plain[] = "\t\t\t\tAmr Mohamed Abdulzaher\t\t\tMohamed Ahmed Shams\n";
     char email1[] = "\t\t\t\tamrnassareng@gmail.com";
