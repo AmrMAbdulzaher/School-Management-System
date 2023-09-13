@@ -51,7 +51,8 @@ int main()
     {
         student[i].id = 0; 
     }
-
+	
+	LoginLine:
 	systemheader();
 
     do
@@ -68,6 +69,8 @@ int main()
             printf("[2] Edit Student Info\n");
             printf("[3] Show Students List\n");
             printf("[4] Exit\n");
+			printf("[5] Logout\n");
+			printf("[6] Exit\n");
             scanChoiceChar:
             scanf(" %c", &choiceChar); // Read a character with space to skip whitespace
             switch (choiceChar)
@@ -190,6 +193,15 @@ int main()
                     break;
                 }
                 case '4':
+                {
+                    //PUT DELETE HERE
+                    return 0;
+                }
+				case '5':
+                {
+                    goto LoginLine;
+                }
+				case '6':
                 {
                     printf("Exiting...\n");
                     return 0;
