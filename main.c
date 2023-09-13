@@ -12,7 +12,6 @@
 
 #define adminUser "admin"
 #define adminPassword "imtheboss"
-
 #define studentUser "ahmed"
 #define studentPassword "1234"
 
@@ -29,7 +28,7 @@ typedef struct
     unsigned char id;
     float gpa;
 
-} studentData;
+}studentData;
 
 int numberOfStudents=0;
 
@@ -58,7 +57,8 @@ int main()
     do
     {
         loginPanel(username, password);
-
+		
+		//USER IS ADMIN
         if (!(strcmp(username, adminUser) && strcmp(password, adminPassword)))
         {
             invalidLogin = 0;
@@ -198,12 +198,16 @@ int main()
                     goto scanChoiceChar;
             }
         }
+		
+		//USER IS STUDENT
         else if (!(strcmp(username, studentUser) && strcmp(password, studentPassword)))
         {
             invalidLogin = 0;
             systemheader();
             printf("HELLO STUDENT!\n");
         }
+		
+		//WRONG USERNAME OR PASSWORD
         else
         {
             attempsCounter--;
