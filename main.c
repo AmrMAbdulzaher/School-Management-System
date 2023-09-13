@@ -68,7 +68,7 @@ int main()
             printf("[1] Add Student\n");
             printf("[2] Edit Student Info\n");
             printf("[3] Show Students List\n");
-            printf("[4] Exit\n");
+            printf("[4] Delete Student Info\n");
 			printf("[5] Logout\n");
 			printf("[6] Exit\n");
             scanChoiceChar:
