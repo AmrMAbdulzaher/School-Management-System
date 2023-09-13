@@ -72,19 +72,20 @@ int main()
 			printf("[5] Logout\n");
 			printf("[6] Exit\n");
             scanChoiceChar:
-            scanf(" %c", &choiceChar); // Read a character with space to skip whitespace
+            scanf(" %c", &choiceChar);
             switch (choiceChar)
             {
                 case '1':
                 {
+					int scanReturn;
 					systemheader();
 					printf("Add Student\n");
     				printf("============\n");
 
                     printf("Enter Student's ID [from 1 to %d]: ",MAXSTUDENTS);
-                    scanf("%hhu", &inputID);
+                    scanReturn= scanf("%hhu", &inputID);
 
-                    if (inputID < 1 || inputID > MAXSTUDENTS)
+                    if (inputID < 1 || inputID > MAXSTUDENTS || scanReturn!=1)
                     {
                         printf("\033[1;31mInvalid Student ID. Press any key to continue.");
 						printf("\033[0m");
@@ -226,15 +227,12 @@ int main()
             if (attempsCounter != 0)
             {
                 systemheader();
-                printf("\033[1;31m");
-                printf("WRONG User or Password! %d attempts left.\n", attempsCounter);
-                printf("\033[0m");
+                printf("\033[1;31mWRONG User or Password! %d attempts left.\n\033[0m", attempsCounter);
             }
             else
             {
 				systemheader();
-                printf("\033[1;31m");
-                printf("You have been kicked out of the system due to too many wrong attempts.\n");
+                printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\n\033[0m");
                 break;
             }
         }
