@@ -15,7 +15,7 @@ studentData student[MAXSTUDENTS];
 
 void printExiting(void)
 {
-	systemheader();
+    systemheader();
     printf("Exiting");
     char plain[] = ".........\n";
     for (int i = 0; plain[i] != '\0'; i++)
@@ -36,8 +36,8 @@ void mainMenu(void)
         student[i].id = 0;
     }
 	
-	systemheader();
-	printf("Main Menu\n");
+    systemheader();
+    printf("Main Menu\n");
     printf("========================\n");
     printf("[1] Login\n");
     printf("[2] About\n");
@@ -90,7 +90,7 @@ void loginPanel(char *user, char *pass)
 	// USER IS ADMIN
     if (!(strcmp(username, adminUser) || strcmp(password, adminPassword)))
     {
-		attempsCounter=4;
+	attempsCounter=4;
         adminPanel(student);
     }
 
@@ -107,7 +107,7 @@ void loginAgain(void)
     if (attempsCounter != 0)
     {
         systemheader();
-		attempsCounter--;
+	attempsCounter--;
         printf("\033[1;31mWRONG User or Password! %d attempts left.\n\033[0m", attempsCounter);
         loginPanel(username, password);
     }
@@ -115,8 +115,8 @@ void loginAgain(void)
     {
         systemheader();
         printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\nPress any key to continue.\033[0m\n");
-		getchar();
-		getchar();
+	getchar();
+	getchar();
 		
     }
 }
@@ -137,7 +137,7 @@ void addStudent(studentData student[])
     {
         printf("\033[1;31mInvalid Student ID. Press any key to continue.\033[0m\n");
         getchar();
-		getchar();
+	getchar();
         adminPanel(student);
     }
 
@@ -169,7 +169,7 @@ void addStudent(studentData student[])
     {
         printf("\033[1;31mALREADY ADDED!, Press any key to continue.\033[0m\n");
     }
-    getchar();
+    	getchar();
 	getchar();
 	adminPanel(student);
 }
@@ -213,7 +213,7 @@ void editStudent(studentData student[])
     printf("\033[1;31mSUCCESSFULLY EDITED!, Press any key to continue.\033[0m\n");
     getchar();
     getchar();
-	adminPanel(student);
+    adminPanel(student);
 }
 
 void showStudents(studentData student[])
@@ -240,7 +240,7 @@ void showStudents(studentData student[])
     printf("\033[1;31mPress any key to continue.\033[0m\n");
     getchar();
     getchar();
-	adminPanel(student);
+    adminPanel(student);
 }
 
 void deleteStudent(studentData student[])
@@ -284,13 +284,13 @@ void adminPanel(studentData student[])
     char choiceChar;
     unsigned char inputID;
     systemheader();
-	printf("Admin Panel\n");
-	printf("========================\n");
+    printf("Admin Panel\n");
+    printf("========================\n");
     printf("[1] Add Student\n");
     printf("[2] Edit Student Info\n");
     printf("[3] Show Students List\n");
     printf("[4] Delete Student Info\n");
-	printf("[5] Main Menu\n");
+    printf("[5] Main Menu\n");
     printf("[6] Logout\n");
     printf("[7] Exit\n");
     printf("========================\n");
@@ -336,8 +336,8 @@ void printAbout(void)
     printf("[2] Developers\n");
     printf("========================\n");
     char aboutMenuInput;
-	scanf(" %c", &aboutMenuInput);
-	switch (aboutMenuInput)
+    scanf(" %c", &aboutMenuInput);
+    switch (aboutMenuInput)
      {
         case'1':
         {
