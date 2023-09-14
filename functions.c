@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 #include <time.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -30,12 +31,12 @@ void printExiting(void)
 void mainMenu(void)
 {
 	char mainMenuInput;
-	
+
 	for (int i = 0; i < MAXSTUDENTS; i++)
     {
         student[i].id = 0;
     }
-	
+
     systemheader();
     printf("Main Menu\n");
     printf("========================\n");
@@ -79,31 +80,41 @@ void systemheader(void)
     printf("========================\n");
 }
 
-void loginPanel(char *user, char *pass)
-{
+void loginPanel(char *user, char *pass) {
     printf("Login Panel\n");
     printf("========================\n");
     printf("Username: ");
     scanf("%19s", user);
     printf("Password: ");
-    scanf("%29s", pass);
-	// USER IS ADMIN
-    if (!(strcmp(username, adminUser) || strcmp(password, adminPassword)))
-    {
-	attempsCounter=4;
+    int i = 0;
+    char c;
+    while (1) {
+        c = getch();
+        if (c == 13) {
+            break;
+        }
+        if (c == 8 && i > 0) {
+            i--;
+            printf("\b \b");
+        } else {
+            pass[i] = c;
+            i++;
+            printf("*");
+        }
+    }
+    pass[i] = '\0';
+    if (strcmp(user, adminUser) == 0 && strcmp(pass, adminPassword) == 0) {
+        attempsCounter = 4;
         adminPanel(student);
     }
-
-    // WRONG USERNAME OR PASSWORD
-    else
-    {
+    else {
         loginAgain();
     }
 }
 
 void loginAgain(void)
 {
-	
+
     if (attempsCounter != 0)
     {
         systemheader();
@@ -117,7 +128,7 @@ void loginAgain(void)
         printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\nPress any key to continue.\033[0m\n");
 	getchar();
 	getchar();
-		
+
     }
 }
 
@@ -325,7 +336,7 @@ void adminPanel(studentData student[])
             adminPanel(student);
     }
 	return;
-	
+
 }
 
 void printAbout(void)
