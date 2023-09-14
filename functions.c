@@ -330,42 +330,77 @@ void adminPanel(studentData student[])
 
 void printAbout(void)
 {
-	systemheader();
-	printf("About\n");
+    aboutLabel:
+    systemheader();
+    printf("[1] Program\n");
     printf("========================\n");
-    puts("\033[1;31m\t\t\t\t\t\t     ===================\n");
-    char plain[] = "\t\t\t\tAmr Mohamed Abdulzaher\t\t\tMohamed Ahmed Shams\n";
-    char email1[] = "\t\t\t\tamrnassareng@gmail.com";
-    char email2[] = "\t\t\tMohamed.Ah.Shams@gmail.com\n";
-    int i;
-    printf("\033[0m");
-    for (i = 0; plain[i] != '\0'; i++)
-    {
-        putchar(plain[i]);
-        fflush(stdout);
-        usleep(100000);
-    }
-    printf("\033[0;32m");
-    for (i = 0; email1[i] != '\0'; i++)
-    {
-        putchar(email1[i]);
-        fflush(stdout);
-        usleep(100000);
-    }
-    printf("\033[0m");
-    printf("\033[0;34m");
-    for (i = 0; email2[i] != '\0'; i++)
-    {
-        putchar(email2[i]);
-        fflush(stdout);
-        usleep(100000);
-    }
-    puts("\033[1;31m\n\t\t\t\t\t\t     ===================");
-    printf("\033[1;31mPress any key to continue.\n");
-    printf("\033[0m");
-    getchar();
-    getchar();
-    mainMenu();
+    printf("[2] Developers\n");
+    printf("========================\n");
+    char aboutMenuInput;
+	scanf(" %c", &aboutMenuInput);
+	switch (aboutMenuInput)
+     {
+        case'1':
+        {
+            systemheader();
+            printf("About Program\n");
+            printf("========================\n");
+            char plain1[] = {"This C code represents a basic School Management System program with user authentication and student data management features.\nIt allows users, primarily administrators, to log in, add, edit, view, or delete student records.\n"};
+            int i;
+            printf("\033[0;36m");
+            for (i = 0; plain1[i] != '\0'; i++)
+            {
+                putchar(plain1[i]);
+                fflush(stdout);
+                usleep(10000);
+            }
+            printf("\033[0m========================\n");
+            printf("\033[1;31mPress any key to continue.\n");
+            printf("\033[0m");
+            getchar();
+            getchar();
+            mainMenu();
+        }
+         case '2':
+         {
+            systemheader();
+            printf("About Developers\n");
+            printf("========================\n");
+            puts("\033[1;31m\t\t\t\t\t\t     ===================\n");
+            char plain[] = "\t\t\t\tAmr Mohamed Abdulzaher\t\t\tMohamed Ahmed Shams\n";
+            char email1[] = "\t\t\t\tamrnassareng@gmail.com";
+            char email2[] = "\t\t\tMohamed.Ah.Shams@gmail.com\n";
+            int i;
+            printf("\033[0m");
+            for (i = 0; plain[i] != '\0'; i++)
+            {
+                putchar(plain[i]);
+                fflush(stdout);
+                usleep(100000);
+            }
+            printf("\033[0;32m");
+            for (i = 0; email1[i] != '\0'; i++)
+            {
+                putchar(email1[i]);
+                fflush(stdout);
+                usleep(100000);
+            }
+            printf("\033[0;34m");
+            for (i = 0; email2[i] != '\0'; i++)
+            {
+                putchar(email2[i]);
+                fflush(stdout);
+                usleep(100000);
+            }
+            puts("\033[1;31m\n\t\t\t\t\t\t     ===================");
+            printf("\033[1;31mPress any key to continue.\n");
+            printf("\033[0m");
+            getchar();
+            getchar();
+            mainMenu();
+         }
+         default: goto aboutLabel;
+     }
 }
 
 
