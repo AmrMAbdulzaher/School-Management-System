@@ -5,9 +5,7 @@
 #endif
 
 #define adminUser "admin"
-#define adminPassword "imtheboss"
-#define studentUser "ahmed"
-#define studentPassword "1234"
+#define adminPassword "admin"
 
 #define MAXSTUDENTS 10
 #define TRUE 1
