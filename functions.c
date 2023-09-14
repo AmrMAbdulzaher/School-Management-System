@@ -330,7 +330,6 @@ void adminPanel(studentData student[])
 
 void printAbout(void)
 {
-    aboutLabel:
     systemheader();
     printf("[1] Program\n");
     printf("========================\n");
@@ -399,7 +398,8 @@ void printAbout(void)
             getchar();
             mainMenu();
          }
-         default: goto aboutLabel;
+         default:  printAbout();
+
      }
 }
 
