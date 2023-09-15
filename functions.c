@@ -189,7 +189,7 @@ void addStudent(studentData student[])
 			
             if (gpa < 0.0f || gpa > 4.0f || scanReturn != 1 )
             {
-                printf("\033[1;31Invalid GPA, \033[0mre-Enter Student's CGPA [MAX. 4]: ");
+                printf("\033[1;31mInvalid GPA, \033[0mre-Enter Student's CGPA [MAX. 4]: ");
             }
             else
             {
@@ -264,7 +264,7 @@ void showStudents(studentData student[])
         {
             if ((student+i)->id != 0)
             {
-                printf("ID: %hhu\tName: %s\tCGPA: %g\n", (student+i)->id, (student+i)->name, (student+i)->gpa);
+                printf("\e[1mID:\033[0m %hhu\t\e[1mName:\033[0m %s\t\e[1mCGPA:\033[0m %g\n", (student+i)->id, (student+i)->name, (student+i)->gpa);
             }
         }
     }
@@ -309,7 +309,7 @@ void deleteStudent(studentData student[])
     else
     {
         printf("NO STUDENTS ADDED YET!\n");
-        printf("\033[0m\n\e[1mPress ENTER to continue.\033[0m");
+        printf("\033[0m\e[1mPress ENTER to continue.\033[0m");
     }
     getchar();
 	adminMenu(student);
