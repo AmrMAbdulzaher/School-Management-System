@@ -1,67 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <ctype.h>
 #include <unistd.h>
 #include "functions.h"
 
 int numberOfStudents = 0;
-char username[20];
-char password[30];
+char username[21];
+char password[31];
 int attempsCounter = 4;
 
 studentData student[MAXSTUDENTS];
 
-void printExiting(void)
+void systemheader(void)
 {
-    systemheader();
-    printf("Exiting");
-    char plain[] = ".........\n";
-    for (int i = 0; plain[i] != '\0'; i++)
-    {
-        putchar(plain[i]);
-        fflush(stdout);
-        usleep(150000);
-    }
-	return;
+    system(CLEAR);
+	printf("========================\n");
+    printf("\e[1mSchool Management System\033[0m\n");
+    printf("========================\n");
 }
 
 void mainMenu(void)
 {
-	char mainMenuInput;
+	unsigned char mainMenuInput;
 
 	for (int i = 0; i < MAXSTUDENTS; i++)
     {
-        student[i].id = 0;
+        (student+i)->id = 0;
     }
 
     systemheader();
-    printf("Main Menu\n");
+    printf("       \e[1mMain Menu\033[0m\n");
     printf("========================\n");
     printf("[1] Login\n");
     printf("[2] About\n");
     printf("[3] Exit\n");
     printf("========================\n");
-	scanf(" %c", &mainMenuInput);
+	
+	scanf("%hhu", &mainMenuInput);
+	while (getchar() != '\n');
+	
 	switch (mainMenuInput)
      {
-         case '1':
+         case 1:
          {
              systemheader();
              loginPanel(username, password);
 			 break;
          }
 
-         case '2':
+         case 2:
          {
-             printAbout();
+             aboutMenu();
              break;
          }
 
-         case '3':
+         case 3:
          {
-            printExiting();
+            exitSystem();
 			break;
          }
 
@@ -71,27 +66,20 @@ void mainMenu(void)
 	return;
 }
 
-
-void systemheader(void)
-{
-    system(CLEAR);
-    printf("School Management System\n");
-    printf("========================\n");
-}
-
 void loginPanel(char *user, char *pass)
 {
-    printf("Login Panel\n");
+    printf("     \e[1mLogin Panel\033[0m\n");
     printf("========================\n");
     printf("Username: ");
-    scanf("%19s", user);
+    scanf(" %[^\n]%*c", user);
     printf("Password: ");
-    scanf("%29s", pass);
+    scanf(" %[^\n]%*c", pass);
+	
 	// USER IS ADMIN
-    if (!(strcmp(username, adminUser) || strcmp(password, adminPassword)))
+    if ( strcmp(username, adminUser) == 0 && strcmp(password, adminPassword) == 0)
     {
         attempsCounter=4;
-        adminPanel(student);
+        adminMenu(student);
     }
      // WRONG USERNAME OR PASSWORD
     else
@@ -106,128 +94,178 @@ void loginAgain(void)
     if (attempsCounter != 0)
     {
         systemheader();
-	attempsCounter--;
+		attempsCounter--;
         printf("\033[1;31mWRONG User or Password! %d attempts left.\n\033[0m", attempsCounter);
         loginPanel(username, password);
     }
     else
     {
         systemheader();
-        printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\nPress any key to continue.\033[0m\n");
-	getchar();
-	getchar();
-
+        printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\nPress ENTER to continue.\033[0m");
+		getchar();
     }
+}
+
+void adminMenu(studentData student[])
+{
+    unsigned char adminMenuInput;
+    systemheader();
+    printf("      \e[1mAdmin Panel\n\033[0m");
+    printf("========================\n");
+    printf("[1] Add Student\n");
+    printf("[2] Edit Student Info\n");
+    printf("[3] Show Students List\n");
+    printf("[4] Delete Student Info\n");
+	printf("[5] Logout\n");
+    printf("[6] Back to Main Menu\n");
+    printf("[7] Exit\n");
+    printf("========================\n");
+    scanf("%hhu", &adminMenuInput);
+	while (getchar() != '\n');
+	
+    switch (adminMenuInput)
+    {
+        case 1:
+            addStudent(student);
+            break;
+        case 2:
+            editStudent(student);
+            break;
+        case 3:
+            showStudents(student);
+            break;
+        case 4:
+            deleteStudent(student);
+            break;
+		case 5:
+			systemheader();
+            loginPanel(username, password);
+			break;	
+		case 6:
+			mainMenu();
+			break;
+
+        case 7:
+            exitSystem();
+			break;
+        default:
+            // Handle invalid input
+            adminMenu(student);
+    }
+	return;
+
 }
 
 void addStudent(studentData student[])
 {
-    int scanReturn;
     unsigned char inputID;
+	int scanReturn;
 
     systemheader();
-    printf("Add Student\n");
+    printf("      \e[1mAdd Student\033[0m\n");
     printf("========================\n");
 
-    printf("Enter Student's ID [from 1 to %d]: ", MAXSTUDENTS);
-    scanReturn = scanf("%hhu", &inputID);
+    printf("ENTER Student's ID [from 1 to %d]: ", MAXSTUDENTS);
+    scanf("%hhu", &inputID);
+	while (getchar() != '\n');
 
-    if (inputID < 1 || inputID > MAXSTUDENTS || scanReturn != 1)
+    if (inputID < 1 || inputID > MAXSTUDENTS)
     {
-        printf("\033[1;31mInvalid Student ID. Press any key to continue.\033[0m\n");
+        printf("\033[1;31mInvalid Student ID. Press ENTER to continue.\033[0m");
         getchar();
-	getchar();
-        adminPanel(student);
+        adminMenu(student);
     }
 
-    if (student[inputID - 1].id == 0)
+    if ((student+INDEX)->id == 0)
     {
-        student[inputID - 1].id = inputID;
-        printf("Enter Student's Full Name: ");
-        scanf(" %[^\n]%*c", student[inputID - 1].name);
-        printf("Enter Student's CGPA [MAX. 4]: ");
+        (student+INDEX)->id = inputID;
+        printf("ENTER Student's Full Name: ");
+        scanf(" %[^\n]%*c", (student+INDEX)->name);
+        printf("ENTER Student's CGPA [MAX. 4]: ");
         float gpa;
         while (1)
         {
-            scanReturn = scanf("%f", &gpa);
-            if (gpa < 0.0 || gpa > 4.0 || scanReturn != 1)
+            scanReturn= scanf("%f", &gpa);
+			while (getchar() != '\n');
+			
+            if (gpa < 0.0f || gpa > 4.0f || scanReturn != 1 )
             {
                 printf("Invalid GPA, re-Enter Student's CGPA [MAX. 4]: ");
-                while (getchar() != '\n'); // Clear input buffer
             }
             else
             {
                 break;
             }
         }
-        student[inputID - 1].gpa = gpa;
+        (student+INDEX)->gpa = gpa;
         numberOfStudents++;
-        printf("\033[1;31mSUCCESSFULLY ADDED!, Press any key to continue.\033[0m\n");
+        printf("\033[1;31mSUCCESSFULLY ADDED!, Press ENTER to continue.\033[0m");
     }
     else
     {
-        printf("\033[1;31mALREADY ADDED!, Press any key to continue.\033[0m\n");
+        printf("\033[1;31mALREADY ADDED!, Press ENTER to continue.\033[0m");
     }
-    	getchar();
-	getchar();
-	adminPanel(student);
+    getchar();
+	adminMenu(student);
 }
 
 void editStudent(studentData student[])
 {
     unsigned char inputID;
-
+	int scanReturn;
+	
     systemheader();
-    printf("Edit Student's Info\n");
+    printf("  \e[1mEdit Student's Info\033[0m\n");
     printf("========================\n");
-    printf("Enter Student's ID [from 1 to %d]: ", MAXSTUDENTS);
+	
+    printf("ENTER Student's ID [from 1 to %d]: ", MAXSTUDENTS);
     scanf("%hhu", &inputID);
-
-    if (inputID < 1 || inputID > MAXSTUDENTS || student[inputID - 1].id == 0)
+	while (getchar() != '\n');
+	
+    if (inputID < 1 || inputID > MAXSTUDENTS || (student+INDEX)->id == 0)
     {
-        printf("\033[1;31mInvalid Student ID. Press any key to continue.\033[0m\n");
+        printf("\033[1;31mInvalid Student ID. Press ENTER to continue.\033[0m");
         getchar();
-        getchar();
-        adminPanel(student);
+        adminMenu(student);
     }
 
-    printf("Enter Student's New Full Name: ");
-    scanf(" %[^\n]%*c", student[inputID - 1].name);
-    printf("Enter Student's New CGPA [MAX. 4]: ");
+    printf("ENTER Student's New Full Name: ");
+    scanf(" %[^\n]%*c", (student+INDEX)->name);
+    printf("ENTER Student's New CGPA [MAX. 4]: ");
     float gpa;
     while (1)
     {
-        int scanReturn = scanf("%f", &gpa);
-        if (gpa < 0.0 || gpa > 4.0 || scanReturn != 1)
+        scanReturn= scanf("%f", &gpa);
+		while (getchar() != '\n');
+		
+        if (gpa < 0.0f || gpa > 4.0f || scanReturn != 1)
         {
             printf("Invalid GPA, re-Enter Student's New CGPA [MAX. 4]: ");
-            while (getchar() != '\n'); // Clear input buffer
         }
         else
         {
             break;
         }
     }
-    student[inputID - 1].gpa = gpa;
-    printf("\033[1;31mSUCCESSFULLY EDITED!, Press any key to continue.\033[0m\n");
+    (student+INDEX)->gpa = gpa;
+    printf("\033[1;31mSUCCESSFULLY EDITED!, Press ENTER to continue.\033[0m");
     getchar();
-    getchar();
-    adminPanel(student);
+    adminMenu(student);
 }
 
 void showStudents(studentData student[])
 {
     systemheader();
-    printf("Students List\n");
+    printf("     \e[1mStudents List\033[0m\n");
     printf("========================\n");
 
     if (numberOfStudents > 0)
     {
         for (int i = 0; i < MAXSTUDENTS; i++)
         {
-            if (student[i].id != 0)
+            if ((student+i)->id != 0)
             {
-                printf("ID: %hhu\tName: %s\tCGPA: %g\n", student[i].id, student[i].name, student[i].gpa);
+                printf("ID: %hhu\tName: %s\tCGPA: %g\n", (student+i)->id, (student+i)->name, (student+i)->gpa);
             }
         }
     }
@@ -236,112 +274,67 @@ void showStudents(studentData student[])
         printf("NO STUDENTS ADDED YET!\n");
     }
 
-    printf("\033[1;31mPress any key to continue.\033[0m\n");
+    printf("\033[1;31mPress ENTER to continue.\033[0m");
     getchar();
-    getchar();
-    adminPanel(student);
+    adminMenu(student);
 }
 
 void deleteStudent(studentData student[])
 {
-    unsigned char inputID;
+    unsigned char inputID;;
 
     systemheader();
-    printf("Delete Student Info\n");
+    printf("   \e[1mDelete Student Info\033[0m\n");
     printf("========================\n");
 
     if (numberOfStudents != 0)
     {
-        printf("Enter Student's ID [from 1 to %d]: ", MAXSTUDENTS);
+        printf("ENTER Student's ID [from 1 to %d]: ", MAXSTUDENTS);
         scanf("%hhu", &inputID);
 
-        if (inputID < 1 || inputID > MAXSTUDENTS || student[inputID - 1].id == 0)
+        if (inputID < 1 || inputID > MAXSTUDENTS || (student+INDEX)->id == 0)
         {
-            printf("\033[1;31mInvalid Student ID. Press any key to continue.\033[0m\n");
+            printf("\033[1;31mInvalid Student ID. Press ENTER to continue.\033[0m");
             getchar();
-            getchar();
-            adminPanel(student);
+			getchar();
+            adminMenu(student);
         }
 
-        student[inputID - 1].id = 0;
-        printf("\033[1;31mSUCCESSFULLY DELETED!, Press any key to continue.\033[0m\n");
+        (student+INDEX)->id = 0;
+        printf("\033[1;31mSUCCESSFULLY DELETED!, Press ENTER to continue.\033[0m");
         numberOfStudents--;
     }
     else
     {
         printf("NO STUDENTS ADDED YET!\n");
-        printf("\033[1;31mPress any key to continue.\033[0m\n");
+        printf("\033[1;31mPress ENTER to continue.\033[0m");
     }
 
     getchar();
-    getchar();
-	adminPanel(student);
+	adminMenu(student);
 }
 
-void adminPanel(studentData student[])
+void aboutMenu(void)
 {
-    char choiceChar;
-    unsigned char inputID;
+	unsigned char aboutMenuInput;
+	
     systemheader();
-    printf("Admin Panel\n");
-    printf("========================\n");
-    printf("[1] Add Student\n");
-    printf("[2] Edit Student Info\n");
-    printf("[3] Show Students List\n");
-    printf("[4] Delete Student Info\n");
-    printf("[5] Main Menu\n");
-    printf("[6] Logout\n");
-    printf("[7] Exit\n");
-    printf("========================\n");
-    scanf(" %c", &choiceChar);
-
-    switch (choiceChar)
-    {
-        case '1':
-            addStudent(student);
-            break;
-        case '2':
-            editStudent(student);
-            break;
-        case '3':
-            showStudents(student);
-            break;
-        case '4':
-            deleteStudent(student);
-            break;
-		case '5':
-			mainMenu();
-			break;
-        case '6':
-			systemheader();
-            loginPanel(username, password);
-			break;
-        case '7':
-            printExiting();
-			break;
-        default:
-            // Handle invalid input
-            adminPanel(student);
-    }
-	return;
-
-}
-
-void printAbout(void)
-{
-    systemheader();
+	printf("         \e[1mAbout\033[0m\n");
+	printf("========================\n");
     printf("[1] Program\n");
-    printf("========================\n");
     printf("[2] Developers\n");
+    printf("[3] Back to Main Menu\n");
     printf("========================\n");
-    char aboutMenuInput;
-    scanf(" %c", &aboutMenuInput);
+    
+    scanf("%hhu", &aboutMenuInput);
+	while (getchar() != '\n');
+	
     switch (aboutMenuInput)
      {
-        case'1':
+        case 1:
         {
             systemheader();
-            printf("About Program\n");
+            printf("     \e[1mAbout Program\033[0m\n");
             printf("========================\n");
             char plain1[] = {"This C code represents a basic School Management System program with user authentication and student data management features.\nIt allows users, primarily administrators, to log in, add, edit, view, or delete student records.\n"};
             int i;
@@ -352,58 +345,78 @@ void printAbout(void)
                 fflush(stdout);
                 usleep(10000);
             }
-            printf("\033[0m========================\n");
-            printf("\033[1;31mPress any key to continue.\n");
-            printf("\033[0m");
-            getchar();
-            getchar();
-            mainMenu();
+			break;
         }
-         case '2':
+         case 2:
          {
             systemheader();
-            printf("About Developers\n");
+            printf("    \e[1mAbout Developers\033[0m\n");
             printf("========================\n");
-            puts("\033[1;31m\t\t\t\t\t\t     ===================\n");
-            char plain[] = "\t\t\t\tAmr Mohamed Abdulzaher\t\t\tMohamed Ahmed Shams\n";
-            char email1[] = "\t\t\t\tamrnassareng@gmail.com";
-            char email2[] = "\t\t\tMohamed.Ah.Shams@gmail.com\n";
+            char amrFullName[] = "Amr Mohamed Abdulzaher";
+            char amrInfo[] = "\namrnassareng@gmail.com\nwww.linkedin.com/in/amrnassareng\n\n";
+			char shamsFullName[] = "Mohamed Ahmed Shams";
+            char shamsInfo[] = "\nMohamed.Ah.Shams@gmail.com\nwww.linkedin.com/in/mashams\n";
             int i;
-            printf("\033[0m");
-            for (i = 0; plain[i] != '\0'; i++)
+			 
+			//AMR
+            printf("\e[1m");
+            for (i = 0; amrFullName[i] != '\0'; i++)
             {
-                putchar(plain[i]);
+                putchar(amrFullName[i]);
                 fflush(stdout);
-                usleep(100000);
+                usleep(30000);
             }
-            printf("\033[0;32m");
-            for (i = 0; email1[i] != '\0'; i++)
+			//AMR EMAIL
+			printf("\033[0;32m");
+            for (i = 0; amrInfo[i] != '\0'; i++)
             {
-                putchar(email1[i]);
+                putchar(amrInfo[i]);
                 fflush(stdout);
-                usleep(100000);
+                usleep(30000);
             }
+			//SHAMS
+			printf("\e[1m");
+            for (i = 0; shamsFullName[i] != '\0'; i++)
+            {
+                putchar(shamsFullName[i]);
+                fflush(stdout);
+                usleep(30000);
+            }
+			//SHAMS EMAIL
             printf("\033[0;34m");
-            for (i = 0; email2[i] != '\0'; i++)
+            for (i = 0; shamsInfo[i] != '\0'; i++)
             {
-                putchar(email2[i]);
+                putchar(shamsInfo[i]);
                 fflush(stdout);
-                usleep(100000);
+                usleep(30000);
             }
-            puts("\033[1;31m\n\t\t\t\t\t\t     ===================");
-            printf("\033[1;31mPress any key to continue.\n");
-            printf("\033[0m");
-            getchar();
-            getchar();
-            mainMenu();
+			break;
          }
-         default:  printAbout();
+		case 3: 
+			mainMenu();
+			return;
+        default:
+			aboutMenu();
 
-     }
+    }
+	//EXIT
+   	printf("\033[0m========================\n");
+    printf("\033[1;31mPress ENTER to continue.");
+    printf("\033[0m");
+    getchar();
+   	aboutMenu();
 }
 
-
-
-
-
-
+void exitSystem(void)
+{
+    systemheader();
+    printf("Exiting");
+    char plain[] = ".........\n";
+    for (int i = 0; plain[i] != '\0'; i++)
+    {
+        putchar(plain[i]);
+        fflush(stdout);
+        usleep(150000);
+    }
+	return;
+}

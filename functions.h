@@ -8,23 +8,23 @@
 #define adminPassword "admin"
 
 #define MAXSTUDENTS 10
-#define TRUE 1
+#define INDEX inputID-1
 
-typedef struct
+typedef struct student
 {
     char name[20];
     unsigned char id;
     float gpa;
 } studentData;
 
-void printExiting(void);
 void systemheader(void);
 void mainMenu(void);
 void loginPanel(char *user, char *pass);
 void loginAgain(void);
-void adminPanel(studentData student[]);
+void adminMenu(studentData student[]);
 void addStudent(studentData student[]);
 void editStudent(studentData student[]);
 void showStudents(studentData student[]);
 void deleteStudent(studentData student[]);
-void printAbout(void);
+void aboutMenu(void);
+void exitSystem(void);
