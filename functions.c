@@ -57,13 +57,13 @@ void mainMenu(void)
          case 3:
          {
             exitSystem();
-			break;
+			return;
          }
 
          default:
             mainMenu();
      }
-	return;
+	
 }
 
 void loginPanel(char *user, char *pass)
@@ -91,7 +91,7 @@ void loginPanel(char *user, char *pass)
 void loginAgain(void)
 {
 
-    if (attempsCounter != 0)
+    if (attempsCounter != 1)
     {
         systemheader();
 		attempsCounter--;
@@ -101,7 +101,7 @@ void loginAgain(void)
     else
     {
         systemheader();
-        printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\nPress ENTER to continue.\033[0m");
+        printf("\033[1;31mYou have been kicked out of the system due to too many wrong attempts.\n\033[0m\e[1mPress ENTER to continue.\033[0m");
 		getchar();
     }
 }
@@ -144,7 +144,6 @@ void adminMenu(studentData student[])
 		case 6:
 			mainMenu();
 			break;
-
         case 7:
             exitSystem();
 			break;
@@ -171,7 +170,7 @@ void addStudent(studentData student[])
 
     if (inputID < 1 || inputID > MAXSTUDENTS)
     {
-        printf("\033[1;31mInvalid Student ID. Press ENTER to continue.\033[0m");
+        printf("\033[1;31mInvalid Student ID. \033[0m\033[0m\e[1mPress ENTER to continue.\033[0m");
         getchar();
         adminMenu(student);
     }
@@ -190,7 +189,7 @@ void addStudent(studentData student[])
 			
             if (gpa < 0.0f || gpa > 4.0f || scanReturn != 1 )
             {
-                printf("Invalid GPA, re-Enter Student's CGPA [MAX. 4]: ");
+                printf("\033[1;31Invalid GPA, \033[0mre-Enter Student's CGPA [MAX. 4]: ");
             }
             else
             {
@@ -199,11 +198,11 @@ void addStudent(studentData student[])
         }
         (student+INDEX)->gpa = gpa;
         numberOfStudents++;
-        printf("\033[1;31mSUCCESSFULLY ADDED!, Press ENTER to continue.\033[0m");
+        printf("\033[1;32mSUCCESSFULLY ADDED! \033[0m\e[1mPress ENTER to continue.\033[0m");
     }
     else
     {
-        printf("\033[1;31mALREADY ADDED!, Press ENTER to continue.\033[0m");
+        printf("\033[1;31mALREADY ADDED! \033[0m\e[1mPress ENTER to continue.\033[0m");
     }
     getchar();
 	adminMenu(student);
@@ -224,7 +223,7 @@ void editStudent(studentData student[])
 	
     if (inputID < 1 || inputID > MAXSTUDENTS || (student+INDEX)->id == 0)
     {
-        printf("\033[1;31mInvalid Student ID. Press ENTER to continue.\033[0m");
+        printf("\033[1;31mInvalid Student ID. \033[0m\e[1mPress ENTER to continue.\033[0m");
         getchar();
         adminMenu(student);
     }
@@ -240,7 +239,7 @@ void editStudent(studentData student[])
 		
         if (gpa < 0.0f || gpa > 4.0f || scanReturn != 1)
         {
-            printf("Invalid GPA, re-Enter Student's New CGPA [MAX. 4]: ");
+            printf("\033[1;31mInvalid GPA, \033[0mre-Enter Student's New CGPA [MAX. 4]: ");
         }
         else
         {
@@ -248,7 +247,7 @@ void editStudent(studentData student[])
         }
     }
     (student+INDEX)->gpa = gpa;
-    printf("\033[1;31mSUCCESSFULLY EDITED!, Press ENTER to continue.\033[0m");
+    printf("\033[1;32mSUCCESSFULLY EDITED! \033[0m\e[1mPress ENTER to continue.\033[0m");
     getchar();
     adminMenu(student);
 }
@@ -274,7 +273,7 @@ void showStudents(studentData student[])
         printf("NO STUDENTS ADDED YET!\n");
     }
 
-    printf("\033[1;31mPress ENTER to continue.\033[0m");
+    printf("\033[0m\e[1mPress ENTER to continue.\033[0m");
     getchar();
     adminMenu(student);
 }
@@ -294,22 +293,24 @@ void deleteStudent(studentData student[])
 
         if (inputID < 1 || inputID > MAXSTUDENTS || (student+INDEX)->id == 0)
         {
-            printf("\033[1;31mInvalid Student ID. Press ENTER to continue.\033[0m");
+            printf("\033[1;31mInvalid Student ID. \033[0m\e[1mPress ENTER to continue.\033[0m");
             getchar();
 			getchar();
             adminMenu(student);
         }
-
-        (student+INDEX)->id = 0;
-        printf("\033[1;31mSUCCESSFULLY DELETED!, Press ENTER to continue.\033[0m");
-        numberOfStudents--;
+		else
+		{
+        	(student+INDEX)->id = 0;
+			numberOfStudents--;
+        	printf("\033[1;32mSUCCESSFULLY DELETED! \033[0m\e[1mPress ENTER to continue.\033[0m");
+			getchar();
+		}
     }
     else
     {
         printf("NO STUDENTS ADDED YET!\n");
-        printf("\033[1;31mPress ENTER to continue.\033[0m");
+        printf("\033[0m\n\e[1mPress ENTER to continue.\033[0m");
     }
-
     getchar();
 	adminMenu(student);
 }
@@ -358,15 +359,15 @@ void aboutMenu(void)
             char shamsInfo[] = "\nMohamed.Ah.Shams@gmail.com\nwww.linkedin.com/in/mashams\n";
             int i;
 			 
-			//AMR
-            printf("\e[1m");
+			//AMR NAME
+            printf("\033[0m");
             for (i = 0; amrFullName[i] != '\0'; i++)
             {
                 putchar(amrFullName[i]);
                 fflush(stdout);
                 usleep(30000);
             }
-			//AMR EMAIL
+			//AMR INFO
 			printf("\033[0;32m");
             for (i = 0; amrInfo[i] != '\0'; i++)
             {
@@ -374,15 +375,15 @@ void aboutMenu(void)
                 fflush(stdout);
                 usleep(30000);
             }
-			//SHAMS
-			printf("\e[1m");
+			//SHAMS NAME
+			printf("\033[0m");
             for (i = 0; shamsFullName[i] != '\0'; i++)
             {
                 putchar(shamsFullName[i]);
                 fflush(stdout);
                 usleep(30000);
             }
-			//SHAMS EMAIL
+			//SHAMS INFO
             printf("\033[0;34m");
             for (i = 0; shamsInfo[i] != '\0'; i++)
             {
@@ -401,7 +402,7 @@ void aboutMenu(void)
     }
 	//EXIT
    	printf("\033[0m========================\n");
-    printf("\033[1;31mPress ENTER to continue.");
+    printf("\033[0m\e[1mPress ENTER to continue.");
     printf("\033[0m");
     getchar();
    	aboutMenu();
@@ -418,5 +419,5 @@ void exitSystem(void)
         fflush(stdout);
         usleep(150000);
     }
-	return;
+	exit(0);
 }
