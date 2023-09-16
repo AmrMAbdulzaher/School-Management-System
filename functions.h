@@ -7,24 +7,28 @@
 #define adminUser "admin"
 #define adminPassword "admin"
 
-#define MAXSTUDENTS 10
-#define INDEX inputID-1
+#define MAX_STUDENTS 10
+
 
 typedef struct student
 {
-    char name[20];
-    unsigned char id;
-    float gpa;
-} studentData;
+	char name[30];
+	unsigned int id;
+	float gpa;
+	unsigned char added;
+	struct student* link;
+}studentData;
 
+void free_Students(studentData* start);
 void systemheader(void);
 void mainMenu(void);
 void loginPanel(char *user, char *pass);
 void loginAgain(void);
-void adminMenu(studentData student[]);
-void addStudent(studentData student[]);
-void editStudent(studentData student[]);
-void showStudents(studentData student[]);
-void deleteStudent(studentData student[]);
+void adminMenu(void);
+void addStudent(studentData** start);
+void editStudent(studentData* start);
+void showStudents(studentData* start);
+void showStudentByID(studentData* start);
+void deleteStudent(studentData** start);
 void aboutMenu(void);
 void exitSystem(void);
