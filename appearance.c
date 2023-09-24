@@ -202,6 +202,7 @@ void printInvalidGPA(void)
 	textReset();
 	printf("re-Enter Student's CGPA [MAX. %g]: ",MAX_GRADE);
 }
+
 void printInfoNotFound(void)
 {
 	textRed_B();
@@ -215,6 +216,7 @@ void printAlreadyEmpty(void)
 	printf("ALREADY EMPTY! ");
 	printPressEnter();
 }
+
 void printDeleted(void)
 {
 	textGreen_B();

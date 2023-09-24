@@ -21,12 +21,9 @@
 #define DevTextTime 30000
 #define exitingDotsTime 150000
 
-
 #define programDescription "This C code represents a basic School Management System program with user authentication and student data management features.\n\nIt allows users, primarily administrators, to log in, add, edit, view, or delete student records.\n"
-
 #define firstDevName "Amr Mohamed Abdulzaher"
 #define firstDevInfo "\namrnassareng@gmail.com\nwww.linkedin.com/in/amrnassareng\n\n"
-
 #define secondDevName "Mohamed Ahmed Shams"
 #define secondDevInfo "\nMohamed.Ah.Shams@gmail.com\nwww.linkedin.com/in/mashams\n"
 

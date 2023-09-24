@@ -22,7 +22,7 @@ void free_Students(studentData* start);
 
 void mainMenu(void);
 
-void loginScanAndChecker(char *user, char *pass);
+void loginScanAndCheck(char *user, char *pass);
 
 void loginPanel(void);
 

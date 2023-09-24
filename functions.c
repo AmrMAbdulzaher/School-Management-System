@@ -99,7 +99,7 @@ void loginAgain(void)
     }
 }
 
-void loginScanAndChecker(char *user, char *pass)
+void loginScanAndCheck(char *user, char *pass)
 {
 		printf("Username: ");
     	scanf(" %[^\n]%*c", user);
@@ -125,7 +125,7 @@ void loginPanel(void)
 	while(1)
 	{
     	printLoginTitle();
-    	loginScanAndChecker(username,password);
+    	loginScanAndCheck(username,password);
 		if(validLogin)
 		{
 			return;
@@ -233,7 +233,7 @@ void addStudent(studentData** start)
 		{
 			printAlreadyAdded();
 			getchar();
-        	adminMenu();
+        	return;
 		}
 		current = current->link;
 	}
