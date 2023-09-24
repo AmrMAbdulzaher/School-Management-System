@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "STD_TYPES.h"
 #include "appearance.h"
 #include "functions.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 
 static char username[MAX_USERNAME_LENGTH+1];
@@ -178,7 +179,7 @@ uint8 scanID(sint32* inputID)
 	scanReturn= scanf("%d", inputID);
 	while (getchar() != '\n');
 	
-    if (*inputID < 1 || scanReturn != 1)
+    if (*inputID < 1 || 1 != scanReturn)
     {
 		printInvalidID();
         getchar();
@@ -196,7 +197,7 @@ f32 scanGPA(void)
 		sint32 scanReturn;
         scanReturn = scanf("%f", &inputGPA);
 		while (getchar() != '\n');
-        if(inputGPA < 0.0f || inputGPA > MAX_GRADE || scanReturn != 1)
+        if(inputGPA < 0.0f || inputGPA > MAX_GRADE ||  1 != scanReturn)
 		{
 			printInvalidGPA();
 		}
@@ -226,24 +227,42 @@ void addStudent(studentData** start)
 		return;
 	}
 	
-	studentData* current= *start;
-	while(current != NULL)
+	if(NULL == *start)
 	{
-		if(current->id == inputID)
-		{
-			printAlreadyAdded();
-			getchar();
-        	return;
-		}
-		current = current->link;
+		studentData* newStudent = (studentData*)malloc(sizeof(studentData));
+		newStudent->id=inputID;
+		addInfo(newStudent);
+		newStudent->link=NULL;
+		*start=newStudent;
 	}
-	
-	studentData* newStudent = (studentData*)malloc(sizeof(studentData));
-	newStudent->id=inputID;
-	addInfo(newStudent);
-	newStudent->link = *start;
-    *start = newStudent;
-	numberOfStudents++;
+	else
+	{
+		studentData* current= *start;
+		while(NULL != current)
+		{
+			if(inputID == current->id)
+			{
+				printAlreadyAdded();
+				getchar();
+    	    	return;
+			}
+			current = current->link;
+		}
+		
+		studentData* newStudent = (studentData*)malloc(sizeof(studentData));
+		newStudent->id=inputID;
+		addInfo(newStudent);
+		
+		current=*start;
+		while(current->link != NULL)
+		{
+			current = current->link;
+		}
+		
+		newStudent->link = NULL;
+    	current->link = newStudent;
+	}
+    numberOfStudents++;
 	printAdded();
     getchar();
 	return;
@@ -265,7 +284,7 @@ void editStudent(studentData* start)
 
     while (student != NULL)
     {
-        if (student->id == inputID)
+        if (inputID == student->id)
         {
             addInfo(student);
 			printEdited();
@@ -294,7 +313,7 @@ void showStudents(studentData* start)
     {
         studentData* student = start;
         
-        while (student != NULL)
+        while (NULL != student)
         {
             if (student->id>0)
             {
@@ -328,9 +347,9 @@ void showStudentByID(studentData* start)
     uint8 found = 0;
     studentData* student = start;
 	
-	while (student != NULL)
+	while (NULL != student)
     {
-        if (student->id == inputID)
+        if (inputID ==student->id)
         {
 			printTitle("          Student's Info\n");
 			printStudentInfo(student);
@@ -361,7 +380,7 @@ void deleteStudent(studentData** start)
 
     while (student != NULL)
     {
-		if (student->id == inputID)
+		if (inputID == student->id)
        	{
 			if(NULL == prevStudent)
 			{
@@ -396,7 +415,7 @@ void exitSystem(void)
 void free_Students(studentData* start)
 {
 	studentData* currentNode = start;
-    while (currentNode != NULL)
+    while (NULL != currentNode)
     {
         studentData* previousNode = currentNode;
         currentNode = currentNode->link;

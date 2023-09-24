@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "STD_TYPES.h"
 #include "functions.h"
 #include "appearance.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 void systemHeader(void)
 {

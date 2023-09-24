@@ -1,5 +1,6 @@
 #ifndef APPEARANCE_H
 #define APPEARANCE_H
+
 #include "functions.h"
 
 #ifdef _WIN32
