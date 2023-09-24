@@ -370,7 +370,7 @@ void deleteStudent(studentData** start)
 			}
 			else
 			{
-				prevStudent= student->link;
+				prevStudent->link= student->link;
 			}
        	    free(student);
 			numberOfStudents--;
