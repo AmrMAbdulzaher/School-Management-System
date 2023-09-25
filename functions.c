@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <ctype.h>
 
 
 static char username[MAX_USERNAME_LENGTH+1];
@@ -109,7 +109,7 @@ void loginScanAndCheck(char *user, char *pass)
 		
     	if ( 0 == strcmp(username, adminUser)  &&  0 == strcmp(password, adminPassword) )
     	{
-    	    attemptsCounter=4;
+    	    attemptsCounter=MAX_LOGIN_ATTEMPTS;
 			validLogin=1U;
     	    adminMenu();
 			return;
@@ -157,12 +157,15 @@ void adminMenu(void)
     	    case 4:
     	        showStudents(start);
     	        break;
-    	    case 5:
+			case 5:
+				showStudentsByGender(start);
+				break;
+    	    case 6:
     	        deleteStudent(&start);
     	        break;
-			case 6:
+			case 7:
 				return;
-    	    case 7:
+    	    case 8:
     	        exitSystem();
 				break;
     	    default:
@@ -172,7 +175,7 @@ void adminMenu(void)
 }
 uint8 scanID(sint32* inputID)
 {
-	uint8 validiationState = 1;
+	uint8 State = 1;
 	sint32 scanReturn;
 	
 	printf("Enter Student's ID: ");
@@ -182,112 +185,314 @@ uint8 scanID(sint32* inputID)
     if (*inputID < 1 || 1 != scanReturn)
     {
 		printInvalidID();
+		printPressEnter();
         getchar();
-        validiationState = 0;
+        State = 0;
     }
 	
-	return validiationState;
+	return State;
 }
 
-f32 scanGPA(void)
+uint8 isValidName(const char *name)
 {
-	while (1)
-    {
-		f32 inputGPA;
-		sint32 scanReturn;
-        scanReturn = scanf("%f", &inputGPA);
-		while (getchar() != '\n');
-        if(inputGPA < 0.0f || inputGPA > MAX_GRADE ||  1 != scanReturn)
+	uint8 State=1;
+	uint8 nameLength= strlen(name);
+    while (*name)
+	{
+    	if ((!isalpha(*name) && !isspace(*name))||nameLength>60)
 		{
-			printInvalidGPA();
+			State=0;
+    	    break;
+    	}
+    	name++;
+    }
+    return State;;
+}
+uint8 Check_Name(char* fullName)
+{
+	uint8 State = 1U;
+	uint8 tries = MAX_INVALID_INPUT_ATTEMPTS;
+	while(1)
+	{
+		if(!isValidName(fullName))
+		{
+			State=0;
+			tries--;
+			if(tries == 0)
+			{
+				tries = MAX_INVALID_INPUT_ATTEMPTS;
+				break;
+			}
+			printInvalidName();
+			scanf(" %[^\n]%*c", fullName);
 		}
 		else
 		{
-			return inputGPA;
+			tries = MAX_INVALID_INPUT_ATTEMPTS;
+			State=1U;
+			break;
 		}
-    }
+	}
+	return State;
 }
 
-void addInfo(studentData* newStudent)
+uint8 Check_Age(sint8* inputAge,uint8* scanReturn)
 {
-	printf("Enter Student's Full Name: ");
-    scanf(" %[^\n]%*c", newStudent->name);
-    printf("Enter Student's GPA [Max. %g]: ", MAX_GRADE);
-    newStudent->gpa = scanGPA();
+	uint8 State = 1U;
+	uint8 tries = MAX_INVALID_INPUT_ATTEMPTS;
+	
+	while (1)
+    {		
+        if(*inputAge < 0 || *scanReturn != 1)
+		{
+			State=0;
+			tries--;
+			if(tries == 0)
+			{
+				tries=MAX_INVALID_INPUT_ATTEMPTS;
+				break;
+			}
+			printInvalidAge();
+			*scanReturn = scanf("%hhd",inputAge);
+			while (getchar() != '\n');
+		}
+		else
+		{
+			tries=MAX_INVALID_INPUT_ATTEMPTS;
+			State=1U;
+			break;
+		}
+    }
+	
+	return State;
+}
+
+uint8 Check_Gender(char* inputGender,uint8* scanReturn)
+{
+	uint8 State = 1U;
+	uint8 tries = MAX_INVALID_INPUT_ATTEMPTS;
+	while(1)
+	{
+		if(('M' == *inputGender || 'F' == *inputGender) && 1 == *scanReturn  )
+		{
+			tries = MAX_INVALID_INPUT_ATTEMPTS;
+			State=1U;
+			break;
+		}
+		else
+		{
+			State=0;
+			tries--;
+			if(tries == 0)
+			{
+				tries = MAX_INVALID_INPUT_ATTEMPTS;
+				break;
+			}
+			printInvalidGender();
+			*scanReturn= scanf(" %c", inputGender);
+			while (getchar() != '\n');
+			*inputGender= toupper(*inputGender);
+		}
+	}
+	return State;
+}
+
+uint8 Check_GPA(f32* inputGPA,uint8* scanReturn)
+{
+	uint8 State = 1U;
+	uint8 tries = MAX_INVALID_INPUT_ATTEMPTS;
+	while (1)
+    {		
+        if(*inputGPA < 0.0f || *inputGPA > MAX_GRADE || *scanReturn != 1)
+		{
+			State=0;
+			tries--;
+			if(tries == 0)
+			{
+				tries=MAX_INVALID_INPUT_ATTEMPTS;
+				break;
+			}
+			printInvalidGPA();
+			*scanReturn = scanf("%f",inputGPA);
+			while (getchar() != '\n');
+		}
+		else
+		{
+			tries=MAX_INVALID_INPUT_ATTEMPTS;
+			State=1U;
+			break;
+		}
+    }
+	
+	return State;
+}
+
+uint8 Scan_Check_Info(studentData* newStudent)
+{
+	uint8 State=1U;
+	uint8 scanReturn;
+	do
+	{
+		
+		//SCAN AND CHECK NAME
+		char fullName[MAX_FULL_NAME_LENGTH+1];
+		printf("Enter Student's Full Name: ");
+		scanf(" %[^\n]%*c", fullName);
+		State = Check_Name(fullName);
+		if(0 == State)
+		{
+			break;
+		}
+		
+		//SCAN AND CHECK AGE
+		sint8 inputAge;
+		printf("Enter Student's Age: ");
+		scanReturn = scanf("%hhd",&inputAge);
+		while (getchar() != '\n');
+    	State = Check_Age(&inputAge,&scanReturn);
+		if(0 == State)
+		{
+			break;
+		}
+		
+		//SCAN AND CHECK GENDER
+		char inputGender;
+		printf("Enter Student's Gender [M or F]: ");
+		scanReturn = scanf(" %c", &inputGender);
+		while (getchar() != '\n');
+		inputGender= toupper(inputGender);
+    	State = Check_Gender(&inputGender,&scanReturn);
+		if(0 == State)
+		{
+			break;
+		}
+		
+		//SCAN AND CHECK GPA
+		f32 inputGPA;
+		printf("Enter Student's GPA [Max. %g]: ", MAX_GRADE);
+		scanReturn= scanf("%f",&inputGPA);
+		while (getchar() != '\n');
+    	State = Check_GPA(&inputGPA,&scanReturn);
+		if(0 == State)
+		{
+			break;
+		}
+		
+		//VALID INPUTS
+		State=1U;
+		strcpy(newStudent->name,fullName);
+		newStudent->age=inputAge;
+		if('M' == inputGender)
+		{
+			strcpy(newStudent->gender,"Male");
+		}
+		else if ('F' == inputGender )
+		{
+			strcpy(newStudent->gender,"Female");
+		}
+		newStudent->gpa=inputGPA;
+	}while(0);
+	
+	return State;
 }
 
 void addStudent(studentData** start)
 {
     sint32 inputID;
-	
-	printTitle("           Add Student\n");
-	
-	if(!scanID(&inputID))
-	{
-		return;
-	}
-	
-	if(NULL == *start)
-	{
-		studentData* newStudent = (studentData*)malloc(sizeof(studentData));
-		newStudent->id=inputID;
-		addInfo(newStudent);
-		newStudent->link=NULL;
-		*start=newStudent;
-	}
-	else
-	{
-		studentData* current= *start;
-		while(NULL != current)
-		{
-			if(inputID == current->id)
-			{
-				printAlreadyAdded();
-				getchar();
-    	    	return;
-			}
-			current = current->link;
-		}
-		
-		studentData* newStudent = (studentData*)malloc(sizeof(studentData));
-		newStudent->id=inputID;
-		addInfo(newStudent);
-		
-		current=*start;
-		while(current->link != NULL)
-		{
-			current = current->link;
-		}
-		
-		newStudent->link = NULL;
-    	current->link = newStudent;
-	}
+
+    printTitle("              Add Student\n");
+
+    if (!scanID(&inputID))
+    {
+        return;
+    }
+
+    if (NULL == *start)
+    {
+        studentData* newStudent = (studentData*)malloc(sizeof(studentData));
+        newStudent->id = inputID;
+        uint8 validProcess = Scan_Check_Info(newStudent);
+        if (!validProcess)
+        {
+            printFailure();
+            free(newStudent);
+            printPressEnter();
+            getchar();
+            return;
+        }
+        newStudent->link = NULL;
+        *start = newStudent;
+    }
+    else
+    {
+        studentData* current = *start;
+        while (NULL != current)
+        {
+            if (inputID == current->id)
+            {
+                printAlreadyAdded();
+                printPressEnter();
+                getchar();
+                return;
+            }
+            current = current->link;
+        }
+
+        studentData* newStudent = (studentData*)malloc(sizeof(studentData));
+        newStudent->id = inputID;
+        uint8 validProcess = Scan_Check_Info(newStudent);
+        if (!validProcess)
+        {
+            printFailure();
+            free(newStudent);
+            printPressEnter();
+            getchar();
+            return;
+        }
+        current = *start;
+        while (current->link != NULL)
+        {
+            current = current->link;
+        }
+
+        newStudent->link = NULL;
+        current->link = newStudent;
+    }
     numberOfStudents++;
-	printAdded();
+    printAdded();
+    printPressEnter();
     getchar();
-	return;
+    return;
 }
+
 
 void editStudent(studentData* start)
 {
     sint32 inputID;
-	
-	printTitle("       Edit Student's Info\n");
-	
-    if(!scanID(&inputID))
-	{
-		return;
-	}
-	
-	uint8 found = 0;
+
+    printTitle("          Edit Student's Info\n");
+
+    if (!scanID(&inputID))
+    {
+        return;
+    }
+
+    uint8 found = 0;
     studentData* student = start;
 
     while (student != NULL)
     {
         if (inputID == student->id)
         {
-            addInfo(student);
-			printEdited();
+            uint8 validProcess = Scan_Check_Info(student);
+            if (!validProcess)
+            {
+                printFailure();
+                printPressEnter();
+                getchar();
+                return;
+            }
+            printEdited();
             found = 1;
             break;
         }
@@ -296,32 +501,87 @@ void editStudent(studentData* start)
 
     if (!found)
     {
-		printNotFoundID();
+        printNotFoundID();
     }
-
+    printPressEnter();
     getchar();
-	return;
+    return;
 }
-
-
 
 void showStudents(studentData* start)
 {
-	printTitle("          Students List\n");
+	printTitle("             Students List\n");
     
     if (numberOfStudents > 0)
     {
+		printNumberOfStudents();
         studentData* student = start;
         
         while (NULL != student)
         {
             if (student->id>0)
             {
-				textNormal_B();
-                printf("Name:\033[0m %s [\e[1mID:\033[0m%hhu]\n", student->name, student->id);
+              	showStudentsFormat();
             }
             student = student->link;
         }
+		
+		printLine();
+    }
+    else
+    {
+        printf("NO STUDENTS ADDED YET!\n");
+    }
+
+    printPressEnter();
+    getchar();
+}
+
+void showStudentsByGender(studentData* start)
+{
+	printTitle("        Students List By Gender\n");
+    
+    if (numberOfStudents > 0)
+    {
+		char inputGender;
+		uint8 scanReturn;
+		uint8 State;
+		printNumberOfStudents();
+		printf("Enter Student's Gender [M or F]: ");
+		scanReturn = scanf(" %c", &inputGender);
+		inputGender=toupper(inputGender);
+		while (getchar() != '\n');
+		State= Check_Gender(&inputGender,&scanReturn);
+		if(0 == State)
+		{
+			printPressEnter();
+			getchar();
+			return;
+		}
+		printLine();
+        studentData* student = start;
+		uint8 foundGender=0;
+        while (NULL != student)
+        {
+            if (student->id > 0 && inputGender == (student->gender)[0] )
+            {
+				foundGender=1;
+				showStudentsByGenderFormat();
+			}
+            student = student->link;
+        }
+		
+		if(!foundGender)
+		{
+			if('M' == inputGender)
+			{
+				printf("No Male Students Added Yet!\n");
+			}
+			else
+			{
+				printf("No Female Students Added Yet!\n");
+			}
+		}
 		printLine();
     }
     else
@@ -337,8 +597,8 @@ void showStudentByID(studentData* start)
 {
 	sint32 inputID;
 	
-	printTitle("           Search by ID\n");
-	
+	printTitle("              Search by ID\n");
+	printNumberOfStudents();
     if(!scanID(&inputID))
 	{
 		return;
@@ -351,7 +611,7 @@ void showStudentByID(studentData* start)
     {
         if (inputID ==student->id)
         {
-			printTitle("          Student's Info\n");
+			printTitle("             Student's Info\n");
 			printStudentInfo(student);
 			printPressEnter();
 			getchar();
@@ -361,6 +621,7 @@ void showStudentByID(studentData* start)
     }
 	
 	printInfoNotFound();
+	printPressEnter();
     getchar();
 }
 
@@ -368,7 +629,7 @@ void deleteStudent(studentData** start)
 {
     sint32 inputID;
 	
-	printTitle("       Delete Student's Info\n");
+	printTitle("          Delete Student's Info\n");
 	
 	if(!scanID(&inputID))
 	{
@@ -394,6 +655,7 @@ void deleteStudent(studentData** start)
        	    free(student);
 			numberOfStudents--;
 			printDeleted();
+			printPressEnter();
 			getchar();
 			return;
        	}
@@ -401,6 +663,7 @@ void deleteStudent(studentData** start)
 		student= student->link;
     }
 	printAlreadyEmpty();
+	printPressEnter();
     getchar();
 }
 

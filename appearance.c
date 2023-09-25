@@ -11,7 +11,7 @@ void systemHeader(void)
     system(CLEAR);
 	printLine();
 	textNormal_B();
-    printf("     School Management System\n");
+    printf("        School Management System\n");
 	textReset();
     printLine();
 }
@@ -20,7 +20,7 @@ void printMainMenu(void)
 {
 	systemHeader();
 	textNormal_B();
-    printf("            Main Menu\n");
+    printf("               Main Menu\n");
 	textReset();
     printLine();
     printf("[1] Login\n");
@@ -33,16 +33,17 @@ void printAdminMenu(void)
 {
 	systemHeader();
 	textNormal_B();
-	printf("           Admin Panel\n");
+	printf("              Admin Panel\n");
 	textReset();
     printLine();
     printf("[1] Add Student\n");
     printf("[2] Edit Student Info\n");
 	printf("[3] Search by ID\n");
     printf("[4] Show Students List\n");
-    printf("[5] Delete Student Info\n");
-    printf("[6] Back to Main Menu\n");
-    printf("[7] Exit\n");
+	printf("[5] Show Students List By Gender\n");
+    printf("[6] Delete Student Info\n");
+    printf("[7] Back to Main Menu\n");
+    printf("[8] Exit\n");
     printLine();
 }
 
@@ -50,7 +51,7 @@ void printAboutMenu(void)
 {
 	systemHeader();
 	textNormal_B();
-	printf("              About\n");
+	printf("                 About\n");
 	textReset();
 	printLine();
     printf("[1] Program\n");
@@ -62,7 +63,7 @@ void printAboutMenu(void)
 void printLoginTitle(void)
 {
 	textNormal_B();
-	printf("          Login Panel\n");
+	printf("             Login Panel\n");
 	textReset();
     printLine();
 }
@@ -110,7 +111,7 @@ void printAboutProgram(void)
 {
 	systemHeader();
 	textNormal_B();
-    printf("          About Program\n");
+    printf("             About Program\n");
 	textReset();
     printLine();
     textCyan();
@@ -125,7 +126,7 @@ void printAboutDevelopers(void)
 {	
 	systemHeader();
 	textNormal_B();
-    printf("         About Developers\n");
+    printf("            About Developers\n");
 	textReset();
 	printLine();
     textReset();
@@ -150,20 +151,6 @@ void printExiting(void)
     printAnimatedText(dots, exitingDotsTime);
 }
 
-void printAdded(void)
-{
-	textGreen_B();
-    printf("SUCCESSFULLY ADDED! ");
-	printPressEnter();
-}
-
-void printAlreadyAdded(void)
-{
-	textRed_B();
-    printf("ALREADY ADDED! ");
-	printPressEnter();
-}
-
 void printStudentInfo(studentData* student)
 {
 	textNormal_B();
@@ -171,56 +158,10 @@ void printStudentInfo(studentData* student)
 	textNormal_B();
     printf("ID:\033[0m %hhu\n", student->id);
 	textNormal_B();
+	printf("Age:\033[0m %hhd\n", student->age);
+	textNormal_B();
+	printf("Gender:\033[0m %s\n", student->gender);
+	textNormal_B();
 	printf("CGPA:\033[0m %g\n", student->gpa);
 	printLine();
-}
-
-void printInvalidID(void)
-{
-	textRed_B();
-    printf("INVALID STUDENT ID! ");
-	printPressEnter();
-}
-
-void printEdited(void)
-{
-	textGreen_B();
-    printf("SUCCESSFULLY EDITED! ");
-	printPressEnter();
-}
-
-void printNotFoundID(void)
-{
-	textRed_B();
-	printf("ID NOT FOUND! ");
-	printPressEnter();
-}
-
-void printInvalidGPA(void)
-{
-	textRed_B();
-    printf("INVALID GPA! ");
-	textReset();
-	printf("re-Enter Student's CGPA [MAX. %g]: ",MAX_GRADE);
-}
-
-void printInfoNotFound(void)
-{
-	textRed_B();
-    printf("STUDENT INFO NOT ADDED YET! ");
-	printPressEnter();
-}
-
-void printAlreadyEmpty(void)
-{
-	textRed_B();
-	printf("ALREADY EMPTY! ");
-	printPressEnter();
-}
-
-void printDeleted(void)
-{
-	textGreen_B();
-    printf("SUCCESSFULLY DELETED! ");
-	printPressEnter();
 }
