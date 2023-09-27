@@ -33,23 +33,6 @@
 #define MAX_INVALID_INPUT_ATTEMPTS 4U // Maximum invalid input attempts allowed
 #define MAX_GRADE 4.0F             // Maximum GPA value
 #define MAX_FULL_NAME_LENGTH 50    // Maximum full name length
-
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
-
-#include "STD_TYPES.h"
-
-// Constants for admin authentication
-#define adminUser "admin"          // Admin username
-#define adminPassword "admin"      // Admin password
-
-// Variable Like Macros
-#define MAX_USERNAME_LENGTH 20     // Maximum username length
-#define MAX_PASSWORD_LENGTH 30     // Maximum password length
-#define MAX_LOGIN_ATTEMPTS 4U      // Maximum login attempts allowed
-#define MAX_INVALID_INPUT_ATTEMPTS 4U // Maximum invalid input attempts allowed
-#define MAX_GRADE 4.0F             // Maximum GPA value
-#define MAX_FULL_NAME_LENGTH 50    // Maximum full name length
 #define MIN_FULL_NAME_LENGTH 2    // Maximum full name length
 #define WRONG_GPA -1.0             // Special value to indicate invalid GPA
 // Functions Like Macros
